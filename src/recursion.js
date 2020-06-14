@@ -7,32 +7,120 @@
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // 120
 var factorial = function(n) {
+  // No factorial if the number is negative
+  if (n < 0) {
+    return null;
+  }
+  // 0! is 1
+  if (n === 0) {
+    return 1;
+  }
+  // Keep n * (n - 1) until we reach 1 * 0!
+  return n * factorial(n - 1);
 };
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 var sum = function(array) {
+  // Do not mutate the input array
+  let copiedArray = array.slice();
+  // If there is a value at index 0, total is equal to it.
+  // Otherwise, total is zero.
+  let total = copiedArray[0] !== undefined ? copiedArray[0] : 0;
+
+  // When reached to 1 item length or less, return the total
+  if (copiedArray.length <= 1) {
+    return total;
+  }
+  // Remove index 0 from the array
+  copiedArray.shift();
+  // Add the total to the new index zero
+  copiedArray[0] = copiedArray[0] + total;
+  // Run the function again with the modified array
+  return sum(copiedArray);
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+  // Make a copy of the array
+  let copiedArray = array.slice();
+
+  // Base case: If we have an array left with 0 length, return 0.
+  if (copiedArray.length === 0) {
+    return 0;
+  }
+
+  // If the first item is an array
+  if (Array.isArray(copiedArray[0])) {
+    // Join the items under the first item to the array
+    // This also removes the first item with .shift()
+    copiedArray = copiedArray.concat(copiedArray.shift(1));
+    // Return the function again with the joined array
+    return arraySum(copiedArray);
+  }
+
+  // Return the first item (since it is not an array) while removing the
+  // first item from the array, plus the arraySum with the rest of the array
+  return copiedArray.shift() + arraySum(copiedArray);
 };
+
+
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+  let number = Math.abs(n);
+  if (number === 1) {
+    return false
+  } else if (number === 0) {
+    return true;
+  }
+  number -= 2;
+  return isEven(number);
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
+
+  if (n === 0) {
+    return 0;
+  }
+
+  return (n > 0) ? (n - 1) + sumBelow(n - 1) : (n + 1) + sumBelow(n + 1);
+
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
+
+  // If x is equal to y, return an empty array
+  if (x === y) {
+    return [];
+  }
+
+  // If x is greater than y
+  if (x > y) {
+    // If y is only one integer away from x, there is no number between.
+    if ( y === x - 1) {
+      // Return an empty array
+      return[];
+    }
+    // Return x - 1 with concatting the recursion with x - 1
+    return [ x - 1 ].concat(range(x - 1, y));
+  }
+
+  // If x is only one integer away from y, there is no number between.
+  if ( x === y - 1) {
+    // Return an empty array
+    return[];
+  }
+  // Return x + 1 with concatting the recursion with x + 1
+  return [ x + 1 ].concat(range(x + 1, y));
 };
+
 
 // 7. Compute the exponent of a number.
 // The exponent of a number says how many times the base number is used as a factor.
