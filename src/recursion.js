@@ -128,6 +128,17 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+
+  // Exponent 0 always returns 1
+  if (exp === 0) { return 1};
+
+  // If a negative exponent is given, it will be 1/result.
+  if (exp < 0) {
+    let multiplication = exponent(base, exp * -1);
+    return 1 / multiplication;
+  }
+  // Return multiplying recursively, deducting exp by 1 each turn.
+  return base * exponent(base, exp - 1);
 };
 
 // 8. Determine if a number is a power of two.
@@ -135,14 +146,60 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+
+  // Base case 1: 2 and 1 are powers of 2
+  if ( n === 2 || n === 1 ) {
+    return true;
+  }
+  // Base case 2: If n is not an integer or is zero, return false.
+  if( !Number.isInteger(n) || n === 0 ) {
+    return false;
+  }
+  // Return the function by dividing n by 2
+  return powerOfTwo(n / 2);
+
 };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+  // First time running, run the function again with the array version
+  if (typeof string === 'string') {
+    return reverse(string.split(''));
+  }
+
+  // If there are no letters left, return empty string.
+  if (string.length === 0) {
+    return '';
+  }
+
+  // Take out the last letter in the list and run the function again
+  return string.pop() + reverse(string);
+
+
 };
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
+  // First time running, split the string into an array, ignoring spaces.
+  // Also make it non-case-sensitive
+  if (typeof string === 'string') {
+    let lowerCaseString = string.toLowerCase();
+    return palindrome(lowerCaseString.split(''));
+  }
+
+  // If the last and first letters do not match, return false.
+  if (string[0] !== string[string.length - 1]) {
+    return false;
+  } else if ( string.length <= 2 ) {
+    // Base case: Otherwise, when 2 or fewer letters left, return true.
+    return true;
+  }
+  // Remove the first letter
+  string.pop();
+  // Remove the last letter
+  string.shift();
+  // Run the function again with the shortened letters list.
+  return palindrome(string);
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -150,12 +207,70 @@ var palindrome = function(string) {
 // modulo(5,2) // 1
 // modulo(17,5) // 2
 // modulo(22,6) // 4
+
+// Cannot write comments inside because the test case does not want forward slash usage.
+// First statement returns NaN if Mod is 0.
+// Second statement returns 0 if x is 0 (part of the base case).
+// Third makes y positive in case it is negative.
+// Fourth one -including nested statements- is the case for negative x input. See below.
+// Fifth checks if x is less than the mod and returns x.
+// Sixth returns the modulo recursively by substracting y from x each turn.
 var modulo = function(x, y) {
+  if (y === 0) {
+    return NaN;
+  }
+
+  if ( x === 0 ) {
+    return 0;
+  }
+
+  if ( y < 0 ) {
+    y = y - y - y;
+  }
+
+  if ( x < 0 ) {
+
+    if ( x + y > 0 ) {
+      return x;
+    }
+
+    return modulo(x + y, y);
+  }
+
+  if ( x < y ) {
+    return x;
+  }
+
+  return modulo(x - y, y);
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
+
+// Cannot write comments inside because the test case does not want forward slash usage.
+// First statement returns zero if any of the numbers is zero.
+// Second statement is the best case, returns the last x when y is down to 1.
+// Third statement modifies the negativity:
+  // If x is positive and y is negative, makes x negative and y positive.
+    // This is because x is returned recursively and it will be negative.
+  // If both numbers are negative, it makes them positive.
+// Last one returns the function recursively while deducting y each time.
 var multiply = function(x, y) {
+
+  if ( x === 0 || y === 0) {
+    return 0;
+  }
+
+  if (y === 1) {
+    return x;
+  }
+
+  if ( (x > 0 && y < 0) || (x < 0 && y < 0) ) {
+    x = -x;
+    y = -y;
+  }
+
+  return x + multiply(x, y - 1);
 };
 
 // 13. Write a function that divides two numbers without using the / operator or
