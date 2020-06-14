@@ -257,7 +257,7 @@ var modulo = function(x, y) {
 // Last one returns the function recursively while deducting y each time.
 var multiply = function(x, y) {
 
-  if ( x === 0 || y === 0) {
+  if (x === 0 || y === 0) {
     return 0;
   }
 
@@ -275,7 +275,28 @@ var multiply = function(x, y) {
 
 // 13. Write a function that divides two numbers without using the / operator or
 // Math methods to arrive at an approximate quotient (ignore decimal endings).
+
+// No forward slashes accepted inside function so no comments there.
+// 1: Return NaN if divided by zero.
+// 2: Modify negatives. If the result will be negative x is negative.
+// 3: If x is 0 or it is less than y, return 0.
+// 4: Adding 1 each time, run the function by substracting y from x.
 var divide = function(x, y) {
+
+  if (y === 0) {
+    return NaN;
+  }
+
+  if ( (x > 0 && y < 0) || (x < 0 && y < 0) ) {
+    x = -x;
+    y = -y;
+  }
+
+  if (x === 0 || x < y) {
+    return 0;
+  }
+
+  return 1 + divide(x - y, y);
 };
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers. The GCD of two
@@ -283,7 +304,43 @@ var divide = function(x, y) {
 // gcd(4,36); // 4
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
+
+// Short answer :
+// var gcd = function(a, b) {
+// if (x < 0 || y < 0) {
+//   return null;
+// }
+//   if (!b) {
+//       return a;
+//   }
+//   return gcd(b, a % b);
+// };
 var gcd = function(x, y) {
+  // If any input is negative, null is requested as return value.
+  if (x < 0 || y < 0) {
+    return null;
+  }
+  // If the second argument is not converted to an array yet.
+  if (!y.length) {
+    // Make x small number, y big number.
+    if (x > y) {
+      let greater = x;
+      x = y;
+      y = greater;
+    }
+    // Make the second argument an array of x and y.
+    y = [x , y];
+  }
+
+  // Base Case: If both of the original values return int when divided by x, return x.
+  // The result can be as great as x, since it is our smaller number.
+  if (Number.isInteger(y[0] / x) && Number.isInteger(y[1] / x)) {
+    return x;
+  }
+
+  // Run the function recursively by deducting x each turn.
+  return gcd(x - 1, y);
+
 };
 
 // 15. Write a function that compares each character of two strings and returns true if
@@ -291,21 +348,46 @@ var gcd = function(x, y) {
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
 var compareStr = function(str1, str2) {
+  if (str1[0] !== str2[0]) {
+    return false;
+  }
+  if (str1.length === 0 ) {
+    return true;
+  }
+  return compareStr(str1.slice(1), str2.slice(1));
 };
 
 // 16. Write a function that accepts a string and creates an array where each letter
 // occupies an index of the array.
 var createArray = function(str) {
+  // Base case: When there is only one letter left, return the letter in an array.
+  if (str.length === 1) {
+    return [str[0]];
+  }
+  // Put the first letter in an array, then concat the next first, then the next first.
+  return [str[0]].concat(createArray(str.slice(1)));
 };
 
 // 17. Reverse the order of an array
 var reverseArr = function(array) {
+  // Base case: When there is only one item left in the array, return the array.
+  if (array.length === 1) {
+    return array;
+  }
+  // Put the last item in the array in an array, then concat the recursive with last item removed.
+  return [array[array.length - 1]].concat(reverseArr(array.slice(0, -1)));
 };
 
 // 18. Create a new array with a given value and length.
 // buildList(0,5) // [0,0,0,0,0]
 // buildList(7,3) // [7,7,7]
 var buildList = function(value, length) {
+  // If only one item left, return the value in an array to be concatted.
+  if (length === 1) {
+    return [value];
+  }
+  // Put the value in an array, then concat the rest with the function.
+  return [value].concat(buildList(value, length - 1));
 };
 
 // 19. Implement FizzBuzz. Given integer n, return an array of the string representations of 1 to n.
