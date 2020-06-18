@@ -396,17 +396,70 @@ var buildList = function(value, length) {
 // For numbers which are multiples of both three and five, output “FizzBuzz” instead of the number.
 // fizzBuzz(5) // ['1','2','Fizz','4','Buzz']
 var fizzBuzz = function(n) {
+  let fizzString = '';
+
+  // Base case: when n is 1, return '1'.
+  if (n <= 1) {
+    return '1';
+  }
+
+  // If n mod 3 and n mod 5 are 0 return FizzBuzz
+  if (n % 3 === 0 && n % 5 === 0) {
+    fizzString = 'FizzBuzz';
+  } else if (n % 5 === 0) {
+    // If n mod 5 is 0 return Buzz
+    fizzString =  'Buzz';
+  } else if (n % 3 === 0) {
+    // If n mod 3 is 0 return Fizz
+    fizzString = 'Fizz';
+  } else {
+    fizzString = n.toString();
+  }
+
+  // Return concatting the arrays in reverse order
+  return [].concat(fizzBuzz(n - 1), fizzString);
+
 };
 
 // 20. Count the occurence of a value in a list.
 // countOccurrence([2,7,4,4,1,4], 4) // 3
 // countOccurrence([2,'banana',4,4,1,'banana'], 'banana') // 2
 var countOccurrence = function(array, value) {
+  // Make a copy of the array so that it is not mutated
+  const copyOfArray = array.slice();
+
+  // Base case: If there are no values left in the array return 0
+  if (copyOfArray.length === 0) {
+    return 0;
+  }
+  // Establish a value count for this recursion
+  let valueCount = 0;
+  // Update the count if the first item matches with the desired value
+  if (copyOfArray[0] === value) {
+    valueCount = 1;
+  }
+  //Remove the first item from the array
+  copyOfArray.shift();
+  // Call the function again with the new array
+  return valueCount + countOccurrence(copyOfArray, value);
+
 };
 
 // 21. Write a recursive version of map.
 // rMap([1,2,3], timesTwo); // [2,4,6]
 var rMap = function(array, callback) {
+  // Base case: If there are no values in the array, return an empty array.
+  if (array.length === 0) {
+    return [];
+  }
+  // Make a copy of the array so that it is not mutated
+  const copyOfArray = array.slice();
+  // Create a binding for the function called with the first item
+  let mappedItem = callback(copyOfArray[0]);
+  // Remove the first item from the array
+  copyOfArray.shift();
+  // Return while adding each modified item to a new array
+  return [].concat(mappedItem, rMap(copyOfArray, callback));
 };
 
 // 22. Write a function that counts the number of times a key occurs in an object.
@@ -414,6 +467,19 @@ var rMap = function(array, callback) {
 // countKeysInObj(obj, 'r') // 1
 // countKeysInObj(obj, 'e') // 2
 var countKeysInObj = function(obj, key) {
+  let count = 0;
+
+  if (typeof obj === 'object') {
+    for (let i in obj) {
+      if (i === key) {
+        count++;
+      }
+      if (typeof obj[i] === 'object') {
+        count += countKeysInObj(obj[i], key);
+        }
+    }
+  }
+  return count;
 };
 
 // 23. Write a function that counts the number of times a value occurs in an object.
