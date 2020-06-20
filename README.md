@@ -1,3 +1,9 @@
+``` diff
+- Please note that the code in this fork includes practicing notes and solutions.
+- If you are interested in solving these problems, please create your fork from the original repo.
+```
+[JS-Challenges/recursion-prompts](https://github.com/JS-Challenges/recursion-prompts)
+
 # Recursion Prompts
 
 ### **What is this?**
